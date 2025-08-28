@@ -34,6 +34,7 @@
       z-index: 2;
       position: relative;
       background: transparent;
+      transition: transform 0.6s ease-in-out;
     }
     .hotspot {
       background: rgba(22, 255, 53, 0.8);
@@ -41,6 +42,36 @@
       width: 20px;
       height: 20px;
       border: 2px solid rgb(170, 170, 170);
+    }
+    /* Popup carrot box */
+    .popup {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      z-index: 5;
+      max-width: 200px;
+      text-align: center;
+      display: none;
+    }
+    .popup button {
+      margin: 5px;
+      padding: 4px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    .popup button.yes {
+      background: #00ffcc;
+      color: black;
+    }
+    .popup button.no {
+      background: #ff5555;
+      color: white;
     }
   </style>
 </head>
@@ -52,21 +83,65 @@
 
   <!-- Alien Model -->
   <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <model-viewer src="alien.glb" alt="Alien Guy"
+  <model-viewer id="alien" src="alien.glb" alt="Alien Guy"
     camera-controls auto-rotate
     shadow-intensity="1"
     style="--poster-color: transparent;">
     
     <!-- Hotspots -->
-    <button class="hotspot" slot="hotspot-1" data-position="0m .88m -0.02m" data-normal="0m 0m 1m" onclick="goToPage('me')"></button>
-    <button class="hotspot" slot="hotspot-2" data-position="0.6m 0.5m -0.115m" data-normal="0m 0m 1m" onclick="goToPage('you')"></button>
-    <button class="hotspot" slot="hotspot-3" data-position="-0.6m 0.5m -0.115m" data-normal="0m 0m 1m" onclick="goToPage('us')"></button>
+    <button class="hotspot" slot="hotspot-1" data-position="0m .88m -0.02m" data-normal="0m 0m 1m" onclick="showPopup(1, event)"></button>
+    <button class="hotspot" slot="hotspot-2" data-position="0.6m 0.5m -0.115m" data-normal="0m 0m 1m" onclick="showPopup(2, event)"></button>
+    <button class="hotspot" slot="hotspot-3" data-position="-0.6m 0.5m -0.115m" data-normal="0m 0m 1m" onclick="showPopup(3, event)"></button>
     
   </model-viewer>
 
+  <!-- Popup box -->
+  <div id="popup" class="popup"></div>
+
+  <audio id="funkyAudio" src="funky.mp3"></audio>
+
   <script>
-    function goToPage(section) {
-      alert("touch " + section + " please!");
+    const popup = document.getElementById("popup");
+    const alien = document.getElementById("alien");
+    const funky = document.getElementById("funkyAudio");
+
+    // Show popup near click
+    function showPopup(node, event) {
+      const questions = {
+        1: "Do you want to visit our secret page?",
+        2: "Want to hear something funky?",
+        3: "Should I launch this alien into space?"
+      };
+      popup.innerHTML = `
+        <p>${questions[node]}</p>
+        <button class="yes" onclick="popupYes(${node})">Yes</button>
+        <button class="no" onclick="hidePopup()">No</button>
+      `;
+      popup.style.left = event.clientX + "px";
+      popup.style.top = event.clientY + "px";
+      popup.style.display = "block";
+      popup.dataset.node = node;
+    }
+
+    function hidePopup() {
+      popup.style.display = "none";
+    }
+
+    function popupYes(node) {
+      hidePopup();
+      if (node === 1) {
+        window.open("https://example.com", "_blank");
+      } else if (node === 2) {
+        funky.play();
+        // remove hotspot 2
+        document.querySelector('[slot="hotspot-2"]').style.display = "none";
+      } else if (node === 3) {
+        // fling alien away
+        alien.style.transform = "translateY(-2000px) scale(0.1)";
+        setTimeout(() => {
+          alien.style.transform = "translateY(0) scale(1)";
+        }, 3000);
+      }
     }
   </script>
 
