@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alien Pilgrims</title>
+  <style>
+    body, html {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: monospace;
+      color: white;
+    }
+    #overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 22px;
+      z-index: 3;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0; /* stars */
+    }
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      position: relative;
+      background: transparent;
+    }
+    .hotspot {
+      background: rgba(0,255,204,0.8);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">ALIEN PILGRIMS</div>
+
+  <!-- Starfield -->
+  <canvas id="bg"></canvas>
+
+  <!-- Alien Model -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <model-viewer src="alien.glb" alt="Alien Guy"
+    camera-controls auto-rotate
+    shadow-intensity="1"
+    style="--poster-color: transparent;">
+    
+    <!-- Hotspots -->
+    <button class="hotspot" slot="hotspot-1" data-position="0m 1.8m 0.1m" data-normal="0m 0m 1m" onclick="goToPage('about')"></button>
+    <button class="hotspot" slot="hotspot-2" data-position="0.4m 1.2m 0.2m" data-normal="0m 0m 1m" onclick="goToPage('music')"></button>
+    <button class="hotspot" slot="hotspot-3" data-position="-0.4m 0.8m 0.2m" data-normal="0m 0m 1m" onclick="goToPage('merch')"></button>
+    
+  </model-viewer>
+
+  <script>
+    function goToPage(section) {
+      alert("Go to " + section + " page!");
+    }
+  </script>
+
+  <!-- Three.js ES Module for stars -->
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+
+    const canvas = document.getElementById("bg");
+    const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+    camera.position.z = 5;
+
+    // Starfield
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 5000;
+    const starVertices = [];
+    for (let i = 0; i < starCount; i++) {
+      let theta = Math.random() * 2 * Math.PI;
+      let phi = Math.acos(2 * Math.random() - 1);
+      let radius = 500 + Math.random() * 1000;
+      let x = radius * Math.sin(phi) * Math.cos(theta);
+      let y = radius * Math.sin(phi) * Math.sin(theta);
+      let z = radius * Math.cos(phi);
+      starVertices.push(x, y, z);
+    }
+    starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starVertices, 3));
+    const starMaterial = new THREE.PointsMaterial({color: 0xffffff, size: 1});
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      stars.rotation.y += 0.0006;
+      stars.rotation.x += 0.0003;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
