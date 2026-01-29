@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #player-container {
+            max-width: 800px;
+            margin: auto;
+            height: 500px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .control-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .input-box {
+            width: 50px;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="player-container">
+        <h1>Video Player</h1>
+        <iframe id="video-player" src="https://embed.nextgencloudtools.com/embed/tv/3452/1-1" frameborder="0" scrolling="no" allowfullscreen="yes" style="height: 100%; width: 100%;"></iframe>
+        <div class="controls">
+            <button class="control-btn" id="prev-episode">← Previous Episode</button>
+            <input type="number" id="series-input" class="input-box" value="1" min="1" max="12">
+            <input type="number" id="episode-input" class="input-box" value="1" min="1" max="24">
+            <button class="control-btn" id="next-episode">Next Episode →</button>
+        </div>
+    </div>
+
+    <script>
+        const maxSeries = 12;
+        const maxEpisodes = 24;
+
+        let currentSeries = 1;
+        let currentEpisode = 1;
+
+        // Update the video iframe URL based on the current series and episode
+        function updateVideoPlayer() {
+            const videoUrl = `https://embed.nextgencloudtools.com/embed/tv/3452/${currentSeries}-${currentEpisode}`;
+            document.getElementById('video-player').src = videoUrl;
+            document.getElementById('series-input').value = currentSeries;
+            document.getElementById('episode-input').value = currentEpisode;
+        }
+
+        // Button event handlers
+        document.getElementById('prev-episode').addEventListener('click', function() {
+            if (currentEpisode > 1) {
+                currentEpisode--;
+            } else if (currentSeries > 1) {
+                currentSeries--;
+                currentEpisode = maxEpisodes;
+            }
+            updateVideoPlayer();
+        });
+
+        document.getElementById('next-episode').addEventListener('click', function() {
+            if (currentEpisode < maxEpisodes) {
+                currentEpisode++;
+            } else if (currentSeries < maxSeries) {
+                currentSeries++;
+                currentEpisode = 1;
+            }
+            updateVideoPlayer();
+        });
+
+        // Update series and episode based on input values
+        document.getElementById('series-input').addEventListener('input', function() {
+            currentSeries = parseInt(this.value) || 1;
+            if (currentSeries < 1) currentSeries = 1;
+            if (currentSeries > maxSeries) currentSeries = maxSeries;
+            updateVideoPlayer();
+        });
+
+        document.getElementById('episode-input').addEventListener('input', function() {
+            currentEpisode = parseInt(this.value) || 1;
+            if (currentEpisode < 1) currentEpisode = 1;
+            if (currentEpisode > maxEpisodes) currentEpisode = maxEpisodes;
+            updateVideoPlayer();
+        });
+
+        // Initial video load
+        updateVideoPlayer();
+    </script>
+
+    <!-- External script -->
+    <script>(s => { s.dataset.zone = '9813589'; s.src = 'https://bvtpk.com/tag.min.js'; })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script'))) </script>
+    <script data-zone="9813589" src="https://bvtpk.com/tag.min.js"></script>
+</body>
+</html>

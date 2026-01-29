@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alien Pilgrims</title>
+  <style>
+    :root{
+      --ink: #eaffff;
+      --neon: #00ffcc;
+      --glass: rgba(10, 18, 24, 0.55);
+      --glass2: rgba(0, 0, 0, 0.35);
+      --border: rgba(0, 255, 204, 0.35);
+      --shadow: 0 20px 60px rgba(0,0,0,0.55);
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: black;
+      font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--ink);
+    }
+
+    /* IMPORTANT: allow scrolling now */
+    body { overflow-y: auto; overflow-x: hidden; }
+
+    /* Background layers stay fixed */
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* Glass UI overlay wrapper */
+    .ui {
+      position: relative;
+      z-index: 5;
+      min-height: 100vh;
+      padding: 22px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ui-inner{
+      width: min(1200px, 100%);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      padding-bottom: 60px;
+    }
+
+    /* Top nav */
+    .topbar{
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(0,255,204,0.08), rgba(0,0,0,0.35));
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      letter-spacing: 1px;
+    }
+
+    .sigil{
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--neon);
+      box-shadow: 0 0 18px var(--neon);
+    }
+
+    .brand h1{
+      font-size: 16px;
+      margin: 0;
+      color: var(--neon);
+      text-shadow: 0 0 12px rgba(0,255,204,0.55);
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .nav a{
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .nav a:hover{ transform: translateY(-1px); border-color: rgba(0,255,204,0.55); }
+
+    /* Glass panels */
+    .panel{
+      border: 1px solid var(--border);
+      background: radial-gradient(1200px 500px at 0% 0%, rgba(0,255,204,0.12), transparent 60%),
+                  linear-gradient(180deg, var(--glass), var(--glass2));
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .panel-h{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,255,204,0.22);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-h h2{
+      font-size: 13px;
+      margin: 0;
+      color: var(--neon);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .panel-b{ padding: 14px 16px; }
+
+    .muted{ opacity: 0.82; font-size: 13px; line-height: 1.45; }
+    .cta-row{ display:flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+    .btn{
+      border: 1px solid rgba(0,255,204,0.35);
+      color: #00110d;
+      background: var(--neon);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: inherit;
+      text-decoration: none;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      box-shadow: 0 0 22px rgba(0,255,204,0.18);
+    }
+    .btn.secondary{
+      background: rgba(0,0,0,0.35);
+      color: var(--ink);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: none;
+    }
+
+    /* Posts list */
+    .posts{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.26);
+      transition: border-color .15s ease, transform .15s ease;
+    }
+    .post:hover{ border-color: rgba(0,255,204,0.45); transform: translateY(-1px); }
+    .post a{ color: var(--ink); text-decoration: none; display:block; }
+    .post .title{ font-weight: 800; font-size: 14px; margin-bottom: 6px; }
+    .post .meta{ font-size: 12px; opacity: 0.8; margin-bottom: 6px; }
+    .post .desc{ font-size: 13px; opacity: 0.9; line-height: 1.45; }
+
+    /* Featured block */
+    .featured{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .featured .big{
+      font-size: 18px;
+      font-weight: 900;
+      margin: 0;
+      color: #eaffff;
+      text-shadow: 0 0 18px rgba(0,0,0,0.55);
+    }
+
+    /* Right column stacked panels */
+    .stack{ display:flex; flex-direction: column; gap: 18px; }
+
+    /* Hotspots stay above model */
+    .hotspot {
+      background: rgba(22, 255, 53, 0.8);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgb(170, 170, 170);
+    }
+
+    /* Popup */
+    .popup {
+      position: fixed;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      border: 2px solid var(--neon);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 14px;
+      z-index: 9999;
+      max-width: 240px;
+      text-align: center;
+      display: none;
+      box-shadow: var(--shadow);
+    }
+    .popup button {
+      margin: 6px 6px 0;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+    }
+    .popup button.yes { background: var(--neon); color: black; }
+    .popup button.no { background: #ff5555; color: white; }
+
+    /* Mobile layout */
+    @media (max-width: 900px){
+      .ui-inner{ grid-template-columns: 1fr; }
+      .nav{ justify-content: flex-start; }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="ui">
+  <div class="ui-inner">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="sigil"></div>
+        <h1>ALIEN PILGRIMS</h1>
+      </div>
+
+      <nav class="nav">
+        <a href="/press/">Press</a>
+        <a href="/journal/">Journal</a>
+        <a href="/events/">Events</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </header>
+
+    <!-- LEFT: Recent + Featured -->
+    <section class="panel">
+      <div class="panel-h">
+        <h2>Most Recent</h2>
+        <a class="btn secondary" href="/journal/">View all</a>
+      </div>
+      <div class="panel-b">
+        <div id="posts" class="posts"></div>
+      </div>
+    </section>
+
+    <aside class="stack">
+      <section class="panel">
+        <div class="panel-h"><h2>Featured Transmission</h2></div>
+        <div class="panel-b featured">
+          <p class="big" id="featuredTitle">Raleigh Night Signal: A field report from the weird side</p>
+          <p class="muted" id="featuredDesc">
+            Short recaps, photo drops, interviews, and local culture transmissions — beamed out by Alien Pilgrims Media.
+          </p>
+          <div class="cta-row">
+            <a class="btn" id="featuredLink" href="/journal/">Read featured</a>
+            <a class="btn secondary" href="/press/">Request press</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-h"><h2>Upcoming / Events</h2></div>
+        <div class="panel-b">
+          <p class="muted">
+            Add 3–6 upcoming events here (or later pull from a JSON file). This is the section that gets you “press access energy.”
+          </p>
+          <div class="cta-row">
+            <a class="btn secondary" href="/events/">See calendar</a>
+            <a class="btn secondary" href="/contact/">Tip line</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-h"><h2>Press Contact</h2></div>
+        <div class="panel-b">
+          <p class="muted">
+            Media inquiries: <strong>press@alienpilgrims.com</strong><br/>
+            Story tips: <strong>signals@alienpilgrims.com</strong>
+          </p>
+        </div>
+      </section>
+    </aside>
+
+  </div>
+</div>
+
+
+  <!-- Starfield -->
+  <canvas id="bg"></canvas>
+  
+  <!-- Three.js ES Module for stars -->
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+
+    const canvas = document.getElementById("bg");
+    const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+    camera.position.z = 5;
+
+    // Starfield
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 5000;
+    const starVertices = [];
+    for (let i = 0; i < starCount; i++) {
+      let theta = Math.random() * 2 * Math.PI;
+      let phi = Math.acos(2 * Math.random() - 1);
+      let radius = 500 + Math.random() * 1000;
+      let x = radius * Math.sin(phi) * Math.cos(theta);
+      let y = radius * Math.sin(phi) * Math.sin(theta);
+      let z = radius * Math.cos(phi);
+      starVertices.push(x, y, z);
+    }
+    starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starVertices, 3));
+    const starMaterial = new THREE.PointsMaterial({color: 0xffffff, size: 1});
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      stars.rotation.y += 0.0006;
+      stars.rotation.x += 0.0003;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+
+  <script>
+  // ====== MOST RECENT POSTS (easy mode: edit this list) ======
+  // Later we can swap this to fetch('/journal/posts.json') or RSS.
+  const recentPosts = [
+    {
+      title: "Signal Log #001 — The Night Market Was Pure Cosmic Sauce",
+      date: "Jan 2026",
+      tag: "Raleigh / Culture",
+      desc: "A quick field report + photos + the 3 most interesting humans I met.",
+      url: "/journal/signal-log-001.html"
+    },
+    {
+      title: "Interview: Local DJ explains the secret language of crowd energy",
+      date: "Jan 2026",
+      tag: "Music / Interview",
+      desc: "Short interview format that’s perfect for getting invited back.",
+      url: "/journal/interview-dj-crowd-energy.html"
+    },
+    {
+      title: "Event Preview: What’s actually worth leaving the house for",
+      date: "Jan 2026",
+      tag: "Events / Preview",
+      desc: "A curated list. Clean, useful, and very “press outlet” vibes.",
+      url: "/journal/event-preview.html"
+    }
+  ];
+
+  const postsEl = document.getElementById("posts");
+  if (postsEl) {
+    postsEl.innerHTML = recentPosts.map(p => `
+      <div class="post">
+        <a href="${p.url}">
+          <div class="title">${p.title}</div>
+          <div class="meta">${p.date} • ${p.tag}</div>
+          <div class="desc">${p.desc}</div>
+        </a>
+      </div>
+    `).join("");
+  }
+
+  // Optional: click anywhere outside popup to close it
+  window.addEventListener("click", (e) => {
+    const popup = document.getElementById("popup");
+    if (!popup) return;
+    const clickedInside = popup.contains(e.target);
+    const isHotspot = (e.target && e.target.classList && e.target.classList.contains("hotspot"));
+    if (!clickedInside && !isHotspot) popup.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
