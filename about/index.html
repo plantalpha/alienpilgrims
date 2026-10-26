@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About | Alien Pilgrims</title>
+    <meta name="description" content="Meet the crew behind Alien Pilgrims.">
+
+    <!-- Use the existing shared stylesheet -->
+    <link rel="stylesheet" href="../css/main.css">
+
+</head>
+
+<body>
+    <!-- Background atmosphere -->
+    <div class="ocean-bg" aria-hidden="true"></div>
+    <div class="bubble bubble-1" aria-hidden="true"></div>
+    <div class="bubble bubble-2" aria-hidden="true"></div>
+    <div class="bubble bubble-3" aria-hidden="true"></div>
+    <div class="bubble bubble-4" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <a href="../index.html" class="site-logo" aria-label="Alien Pilgrims home">
+            <img src="../assets/images/alien-pilgrims-logo.png" alt="Alien Pilgrims">
+        </a>
+
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="../bi0nic-baby/" class="nav-item" aria-label="Bi0nic Baby">
+                <img src="../assets/images/nav-bi0.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Bi0nic Baby</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../html-surfer/" class="nav-item" aria-label="HTML Surfer">
+                <img src="../assets/images/nav-surfer.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>HTML☺︎Surfer</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../projects/" class="nav-item" aria-label="Projects">
+                <img src="../assets/images/nav-projects.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Projects</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../shop/" class="nav-item" aria-label="Shop">
+                <img src="../assets/images/nav-shop.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Shop</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="./" class="nav-item active" aria-current="page" aria-label="About">
+                <img src="../assets/images/nav-about.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>About</strong>
+                    <small></small>
+                </span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main About page -->
+    <main class="site-main about-main">
+        <section class="about-panel" aria-labelledby="about-title">
+
+            <h1 id="about-title">
+                Who are <span>Alien Pilgrims?</span>
+            </h1>
+
+            <p class="about-intro">
+                We are a creative collective based in Raleigh, NC created to uplift the local scene
+                and promote positive vibes  in all directions. We are founded on a basis
+                of Christ Jesus and we aim to spread His love through all our creative endeavors!
+            </p>
+
+            <!-- Crew / members -->
+            <section class="about-section" aria-labelledby="members-title">
+                <h2 id="members-title">The Crew</h2>
+
+                <p>
+                
+                </p>
+
+                <ul class="member-list">
+                    <li class="member-card">
+                        <span class="member-name">HTML ☺︎ Surfer</span>
+                        <span class="member-role">Founder + Creative Director</span>
+                    </li>
+
+                    <li class="member-card">
+                        <span class="member-name">Bi0nic Baby</span>
+                        <span class="member-role">DJ + Musical Director</span>
+                    </li>
+
+                </ul>
+            </section>
+
+            
+
+        </section>
+
+        <!-- Contact form -->
+            <section class="about-section" aria-labelledby="contact-title">
+                <h2 id="contact-title">Send a Transmission</h2>
+
+                <p>
+                    Questions, comments, theories, remarks, or something strange
+                    from your corner of the universe? Send it our way.
+                </p>
+
+                <form class="contact-form" onsubmit="return false;">
+                    <label for="contact-name">
+                        Name
+                        <input
+                            id="contact-name"
+                            name="name"
+                            type="text"
+                            autocomplete="name"
+                            placeholder="What should we call you?"
+                        >
+                    </label>
+
+                    <label for="contact-email">
+                        Email
+                        <input
+                            id="contact-email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                        >
+                    </label>
+
+                    <label for="contact-message">
+                        Question / Comment / Theory / Remark
+                        <textarea
+                            id="contact-message"
+                            name="message"
+                            placeholder="Transmit your thoughts here..."
+                        ></textarea>
+                    </label>
+
+                    <button
+                        class="contact-submit"
+                        type="button"
+                        title="The contact form will be connected later"
+                    >
+                        TRANSMIT MESSAGE ↗
+                    </button>
+
+                    <p class="form-note">
+                        Transmission system offline for now — this form is a
+                        visual placeholder and does not send messages yet.
+                    </p>
+                </form>
+            </section>
+
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div>ALIEN PILGRIMS © 2026</div>
+        <div>by HTML ☺︎ Surfer</div>
+    </footer>
+</body>
+</html>

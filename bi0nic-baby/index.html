@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bi0nic Baby | Alien Pilgrims</title>
+    <meta name="description" content="Enter the world of Bi0nic Baby: music, art, and digital experiments.">
+
+    <!-- Shared Alien Pilgrims stylesheet -->
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Page-specific styling -->
+    <style>
+        .bi0nic-main {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .bi0nic-panel {
+            padding: clamp(24px, 5vw, 60px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+
+            background:
+                radial-gradient(
+                    circle at 85% 10%,
+                    rgba(0, 255, 204, 0.09),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    135deg,
+                    rgba(3, 27, 40, 0.96),
+                    rgba(1, 13, 22, 0.96)
+                );
+
+            box-shadow: 0 0 35px rgba(0, 255, 204, 0.06);
+        }
+
+        .bi0nic-panel h1 {
+            margin: 0 0 16px;
+            color: var(--white);
+            font-size: clamp(32px, 5vw, 56px);
+            line-height: 1.12;
+            letter-spacing: -1px;
+        }
+
+        .bi0nic-panel h1 span {
+            color: var(--cyan);
+        }
+
+        .bi0nic-intro {
+            max-width: 700px;
+            margin: 0 0 28px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Two buttons next to each other */
+        .bi0nic-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .bi0nic-links .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .bi0nic-links .text-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 18px;
+
+            border: 1px solid var(--border);
+            border-radius: 6px;
+
+            color: var(--cyan-soft);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-decoration: none;
+
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .bi0nic-links .text-link:hover {
+            background: rgba(0, 255, 204, 0.08);
+            border-color: var(--cyan);
+        }
+
+        /* Game box */
+        .game-section {
+            margin-top: 28px;
+            padding: clamp(20px, 3vw, 32px);
+
+            border: 1px solid rgba(0, 255, 204, 0.24);
+            border-radius: 14px;
+
+            background: rgba(0, 12, 20, 0.55);
+        }
+
+        .game-section h2 {
+            margin: 0 0 12px;
+            color: var(--cyan-soft);
+            font-size: clamp(19px, 2.6vw, 25px);
+            letter-spacing: 1px;
+        }
+
+        .game-description {
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* Temporary game placeholder */
+        .game-window {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 320px;
+            padding: 28px;
+
+            border: 1px dashed rgba(0, 255, 204, 0.35);
+            border-radius: 10px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(0, 255, 204, 0.07),
+                    transparent 65%
+                ),
+                #020c13;
+
+            text-align: center;
+        }
+
+        .game-icon {
+            font-size: 38px;
+            line-height: 1;
+        }
+
+        .game-window h3 {
+            margin: 0;
+            color: var(--white);
+            font-size: 18px;
+        }
+
+        .game-window p {
+            max-width: 420px;
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .game-status {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* The embedded game will fill this frame */
+        .game-frame {
+            display: block;
+            width: 100%;
+            height: 900px;
+            border: none;
+            border-radius: 12px;
+            background: #071522;
+            overflow: hidden;
+        }
+
+        @media (max-width: 600px) {
+            .bi0nic-panel {
+                padding: 24px 18px;
+                border-radius: 16px;
+            }
+
+            .bi0nic-links {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .bi0nic-links a {
+                box-sizing: border-box;
+                width: 100%;
+            }
+
+            .game-window {
+                min-height: 260px;
+                padding: 20px;
+            }
+
+            .game-frame {
+                height: 380px;
+            }
+        }
+
+        
+        @media (max-width: 600px) {
+            .game-frame {
+                width: 100%;
+                height: 850px;
+                border-radius: 8px;
+            }
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <!-- Background atmosphere -->
+    <div class="ocean-bg" aria-hidden="true"></div>
+    <div class="bubble bubble-1" aria-hidden="true"></div>
+    <div class="bubble bubble-2" aria-hidden="true"></div>
+    <div class="bubble bubble-3" aria-hidden="true"></div>
+    <div class="bubble bubble-4" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <a href="../index.html" class="site-logo" aria-label="Alien Pilgrims home">
+            <img src="../assets/images/alien-pilgrims-logo.png" alt="Alien Pilgrims">
+        </a>
+
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="./" class="nav-item active" aria-current="page" aria-label="Bi0nic Baby">
+                <img src="../assets/images/nav-bi0.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Bi0nic Baby</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../html-surfer/" class="nav-item" aria-label="HTML Surfer">
+                <img src="../assets/images/nav-surfer.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>HTML☺︎Surfer</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../projects/" class="nav-item" aria-label="Projects">
+                <img src="../assets/images/nav-projects.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Projects</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../shop/" class="nav-item" aria-label="Shop">
+                <img src="../assets/images/nav-shop.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>Shop</strong>
+                    <small></small>
+                </span>
+            </a>
+
+            <a href="../about/" class="nav-item" aria-label="About">
+                <img src="../assets/images/nav-about.png" alt="">
+                <span class="nav-tooltip">
+                    <strong>About</strong>
+                    <small></small>
+                </span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="site-main bi0nic-main">
+
+        <!-- Bi0nic Baby introduction and links -->
+        <section class="bi0nic-panel" aria-labelledby="bi0nic-title">
+
+            <h1 id="bi0nic-title">
+                Enter Planet <span>Bi0nic Baby.</span>
+            </h1>
+
+            <p class="bi0nic-intro">
+                She's the dubstep-bass-riddim-dance diva of Raleigh, NC.
+            </p>
+
+            <div class="bi0nic-links">
+
+                <!-- Replace # with Bi0nic Baby's actual SoundCloud profile URL -->
+                <a
+                    href="https://soundcloud.com/bi0nicbaby"
+                    class="button"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    LISTEN ON SOUNDCLOUD ↗
+                </a>
+
+                <!-- Update this URL if her website uses a different address -->
+                <a
+                    href="https://bi0nicbaby.com/"
+                    class="text-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    VISIT HER WEBSITE ↗
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Mini-game area -->
+        <section class="game-section" aria-labelledby="game-title">
+
+            <h2 id="game-title">Please Enjoy</h2>
+
+            <p class="game-description">
+                Tetris
+            </p>
+
+            <!-- Placeholder until a game is selected -->
+            
+                <iframe
+                    class="game-frame"
+                    src="games/tetris/enhanced-tetris.html"
+                    title="Bi0nic Baby's Tetris Arcade"
+                    loading="lazy"
+                    allow="fullscreen"
+                    allowfullscreen
+                ></iframe>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div>ALIEN PILGRIMS © 2026</div>
+        <div>by HTML ☺︎ Surfer</div>
+    </footer>
+
+    <!-- Shared JavaScript -->
+    <script src="../js/main.js"></script>
+</body>
+</html>
