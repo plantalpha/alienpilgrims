@@ -494,6 +494,17 @@
           }
       }
 
+      #fullscreenButton {
+        border: 2px solid var(--tetris-green, #39ff14);
+        color: var(--tetris-green, #39ff14);
+        background: #080808;
+        box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
+    }
+
+    #fullscreenButton:active {
+        background: var(--tetris-green, #39ff14);
+        color: #080808;
+    }
 
   </style>
 </head>
@@ -550,6 +561,12 @@
         <div class="mobile-control-row">
             <button type="button" data-action="drop">HARD DROP</button>
             <button type="button" data-action="pause">PAUSE</button>
+        </div>
+
+        <div class="mobile-control-row">
+            <button type="button" id="fullscreenButton">
+                ⛶ FULL SCREEN
+            </button>
         </div>
     </div>
 
@@ -1640,6 +1657,28 @@
             case "pause":
                 togglePause();
                 break;
+        }
+    });
+
+    const fullscreenButton = document.getElementById("fullscreenButton");
+
+    fullscreenButton.addEventListener("click", async () => {
+        try {
+            if (document.fullscreenElement) {
+                await document.exitFullscreen();
+            } else if (document.documentElement.requestFullscreen) {
+                await document.documentElement.requestFullscreen();
+            } else {
+                alert(
+                    "Fullscreen isn't supported in this browser. " +
+                    "Try rotating your phone sideways for a larger game view."
+                );
+            }
+        } catch (error) {
+            alert(
+                "Fullscreen isn't available in this browser. " +
+                "Try rotating your phone sideways."
+            );
         }
     });
 
